@@ -44,6 +44,7 @@ class ConvOccupancyGridEncoderLayer(nn.Module):
             )
     
             layers.append(conv_layer)
+            layers.append(nn.BatchNorm2d(num_filter))
             layers.append(nn.ReLU())
             layers.append(nn.Dropout2d(params.drop_prob))
             pooling_layer = nn.MaxPool2d(kernel_size=2, stride=2)
