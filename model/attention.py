@@ -4,17 +4,16 @@ import torch.nn.functional as F
 
 class AgentSelfAlignmentLayer(nn.Module):
     """
-    Enables agent to become aware of its temporal identity.
+    Enables agent to understand what is the importance of each timestep.
     Agent features are cross-attended with a learned query in temporal dimension.
     """
     
     def __init__(self,
                  params,
-                 name='agent_self_alignment'):
+                 seq_downsample=1):
         super().__init__()
         
-        self.name = name
-        
+        self.seq_downsample=seq_downsample        
         if params.hidden_size % params.num_heads != 0:
             raise ValueError(f'params.hidden_size ({params.hidden_size}) must be an integer '
                            f'times bigger than num_heads ({params.num_heads}).')
@@ -39,24 +38,18 @@ class AgentSelfAlignmentLayer(nn.Module):
             torch.empty(1, 1, 1, params.hidden_size).uniform_(-1.0, 1.0)
         )
     
-    def build_learned_query(self, input_batch):
-        """Converts self.learned_query_vec into a learned query vector."""
-        # Get dimensions
-        b = input_batch.shape[0]
-        a = input_batch.shape[1]
-        t = input_batch.shape[2]
-        
-        return self.learned_query_vec.repeat(b, a, t, 1)
     
     def forward(self, input_batch):
         
         b, a, t, h = input_batch.shape
         
+        out_seq = t//self.seq_downsample
+
         # Build learned query [b, a, t, h]
-        learned_query = self.build_learned_query(input_batch)
+        learned_query = self.learned_query_vec.repeat(b, a, out_seq, 1)
         
         # Reshape tensors
-        learned_query_reshaped = learned_query.view(b*a, t, h)
+        learned_query_reshaped = learned_query.view(b*a, out_seq, h)
         input_batch_reshaped = input_batch.view(b*a, t, h)
         
         attn_out, _ = self.attn_layer(
@@ -66,7 +59,7 @@ class AgentSelfAlignmentLayer(nn.Module):
             attn_mask=None,
         )
         
-        attn_out = attn_out.view(b, a, t, h)
+        attn_out = attn_out.view(b, a, out_seq, h)
         attn_out = self.attn_ln(attn_out + input_batch)
         
         out = self.ff_layer1(attn_out)

@@ -17,7 +17,7 @@ class HumanRobotInteractionTransformer(nn.Module):
 
         self.human_agent_encoding_layer = agent_encoder.FeatureConcatAgentEncoderLayer('human',params)
         self.robot_agent_encoding_layer = agent_encoder.FeatureConcatAgentEncoderLayer('robot',params)
-        self.human_self_alignment_layer = attention. AgentSelfAlignmentLayer(params)
+        self.human_self_alignment_layer = attention. AgentSelfAlignmentLayer(params, seq_downsample=1)
         self.agent_type_cross_attn_layer= attention.AgentTypeCrossAttentionLayer(params)
         self.human_self_attn_layer= attention.SelfAttnTransformerLayer(params)
 
