@@ -1,14 +1,14 @@
 import torch
 from torch.utils.data import DataLoader, random_split
 
-from .model.model import HumanRobotInteractionTransformer
-from .model.model_params import ModelParams
-from .dataset.torch_dataset import TrajectoryPredictionDataset
+from model.model import HumanRobotInteractionTransformer
+from model.model_params import ModelParams
+from dataset.torch_dataset import TrajectoryPredictionDataset
 
-from .utils.training import train
+from utils.training import train
 
-TRAIN_PATH = "Human-Traj-Prediction/HumanTrajectoryPredictionDataset/data/train_val"
-VAL_PATH     = "Human-Traj-Prediction/HumanTrajectoryPredictionDataset/data/test"
+TRAIN_PATH = "data/oxford/train_val"
+VAL_PATH     = "data/oxford/test"
 CKPT_DIR      = "checkpoints"
 
 seq_len  = 10

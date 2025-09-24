@@ -18,7 +18,7 @@ The module contains a dataclasses used to configure the model.
 """
 
 # from model import is_hidden_generators
-from . import head, embed
+from model import head, embed
 # from model import scene_encoders
 
 class ModelParams(object):
@@ -39,7 +39,7 @@ class ModelParams(object):
       depth=8,
       mask_style=None,
       scene_encoder=None,
-      prediction_head=head.PredictionHeadLayer,
+      prediction_head=head.LstmHead,
       prediction_head_hidden_units=None,
       pred_len=10,
       drop_prob=0.1,

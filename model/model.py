@@ -1,8 +1,8 @@
 import torch.nn as nn
-from .model_params import ModelParams
+from model.model_params import ModelParams
 import torch.nn as nn
 
-from . import agent_encoder, attention, scene_encoder,scene_attn, head, preprocess
+from model import agent_encoder, attention, scene_encoder,scene_attn, head, preprocess
 
 class HumanRobotInteractionTransformer(nn.Module):
 
