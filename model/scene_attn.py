@@ -39,9 +39,9 @@ class SceneCrossAttnTransformerLayer(nn.Module):
         
         # b, H= scene_ctx.shape
         scene_enc=scene_enc.unsqueeze(1).unsqueeze(1)
-        scene_enc = scene_enc.expand(b, a, t, h)
+        scene_enc = scene_enc.expand(b, a, 1, h)
         query = input_batch.reshape(b * a, t, h)
-        key_value = scene_enc.reshape(b * a, t, h)
+        key_value = scene_enc.reshape(b * a, 1, h)
         
         # Cross-attention: each agent-timestep queries all scene elements
         attn_out,_ = self.attn_layer(
